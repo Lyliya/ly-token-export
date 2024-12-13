@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Export Tokens</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      button {
+        padding: 10px 15px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      select {
+        margin-top: 10px;
+        width: 100%;
+        padding: 5px;
+      }
+      textarea {
+        width: 100%;
+        height: 200px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Export Figma Tokens</h1>
+    <label for="collection">Select Variable Collection:</label>
+    <select id="collection"></select>
+    <button id="export">Export Tokens</button>
+    <textarea id="output" readonly></textarea>
+    <script>
+      const exportButton = document.getElementById("export");
+      const output = document.getElementById("output");
+      const collectionSelect = document.getElementById("collection");
+
+      parent.postMessage({ pluginMessage: { type: "get-collections" } }, "*");
+
+      exportButton.onclick = () => {
+        const selectedCollectionId = collectionSelect.value;
+        parent.postMessage(
+          { pluginMessage: { type: "export-tokens", selectedCollectionId } },
+          "*"
+        );
+      };
+
+      window.onmessage = (event) => {
+        const msg = event.data.pluginMessage;
+        if (msg.type === "populate-collections") {
+          collectionSelect.innerHTML = msg.collections
+            .map((col) => `<option value="${col.id}">${col.name}</option>`)
+            .join("");
+        } else if (msg.type === "tokens-exported") {
+          output.value = JSON.stringify(msg.tokens, null, 2);
+        }
+      };
+    </script>
+  </body>
+</html>
