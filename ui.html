@@ -2,35 +2,116 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Export Tokens</title>
+    <title>Ly Token Exporter</title>
+
     <style>
       body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        color: white;
+        background-color: #181818;
+        font-family: "Inter", "Helvetica", sans-serif;
       }
-      button {
-        padding: 10px 15px;
-        font-size: 14px;
+
+      .container {
+        display: flex;
+        height: 100%;
+        flex-grow: 0;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      .left {
+        padding: 8px;
+        width: 33%;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #464646;
+        flex-grow: 0;
+        flex-shrink: 0;
+        box-sizing: border-box;
+      }
+
+      .right {
+        /* padding: 8px; */
+        width: 66%;
+        flex-grow: 0;
+        flex-shrink: 0;
+        box-sizing: border-box;
+      }
+
+      .grow {
+        flex: 1;
+      }
+
+      .field-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      #output {
+        height: 100%;
+        width: 100%;
+        overflow: auto;
+        padding: 4px;
+        margin: 0;
+        resize: none;
+        border: none;
+        white-space: pre;
+        background-color: #181818;
+        color: white;
+      }
+
+      h1 {
+        font-size: larger;
+      }
+
+      #export {
+        appearance: none;
         cursor: pointer;
+        background-color: #7500a3;
+        color: white;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        height: 40px;
+        font-size: 16px;
+        line-height: 24px;
+        font-weight: 500;
       }
-      select {
-        margin-top: 10px;
-        width: 100%;
-        padding: 5px;
+
+      #export:hover {
+        background-color: #64008b;
       }
-      textarea {
-        width: 100%;
-        height: 200px;
-        margin-top: 10px;
+
+      #collection {
+        background-color: #464646;
+        color: white;
+        height: 24px;
+        border-radius: 4px;
       }
     </style>
   </head>
+
   <body>
-    <h1>Export Figma Tokens</h1>
-    <label for="collection">Select Variable Collection:</label>
-    <select id="collection"></select>
-    <button id="export">Export Tokens</button>
-    <textarea id="output" readonly></textarea>
+    <div class="container">
+      <div class="left">
+        <h1>Export Figma Tokens</h1>
+        <div class="field-wrapper">
+          <label for="collection">Select Variable Collection:</label>
+          <select id="collection"></select>
+        </div>
+        <div class="grow"></div>
+        <button id="export">Export Tokens</button>
+      </div>
+      <div class="right">
+        <textarea id="output" readonly>{}</textarea>
+      </div>
+    </div>
+
     <script>
       const exportButton = document.getElementById("export");
       const output = document.getElementById("output");
@@ -46,7 +127,7 @@
         );
       };
 
-      window.onmessage = (event) => {
+      window.onmessage = async (event) => {
         const msg = event.data.pluginMessage;
         if (msg.type === "populate-collections") {
           collectionSelect.innerHTML = msg.collections

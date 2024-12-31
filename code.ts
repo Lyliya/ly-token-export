@@ -1,4 +1,4 @@
-figma.showUI(__html__, { width: 400, height: 400 });
+figma.showUI(__html__, { width: 650, height: 500 });
 
 type Value = {
   reference?: string;
@@ -11,7 +11,7 @@ function rgba2hex(r: number, g: number, b: number, a?: number) {
     ((g * 255) | (1 << 8)).toString(16).slice(1) +
     ((b * 255) | (1 << 8)).toString(16).slice(1);
 
-  if (a && a !== 1) {
+  if (a !== undefined && a !== 1) {
     const alpha =
       a !== undefined ? ((a * 255) | (1 << 8)).toString(16).slice(1) : "";
 
